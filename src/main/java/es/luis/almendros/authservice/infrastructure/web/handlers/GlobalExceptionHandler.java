@@ -153,7 +153,7 @@ public class GlobalExceptionHandler {
         try {
             HttpStatus status = HttpStatus.valueOf(statusCode);
             return status.getReasonPhrase();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException _) {
             return "Error";
         }
     }

@@ -2,8 +2,7 @@ package es.luis.almendros.authservice.infrastructure.adapters.security;
 
 import es.luis.almendros.authservice.application.ports.output.JwtTokenPort;
 import es.luis.almendros.authservice.domain.exceptions.InvalidTokenException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -60,27 +59,43 @@ public class JwtTokenAdapter implements JwtTokenPort {
 
     @Override
     public UUID validateTokenAndGetUserId(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-        if ("refresh".equals(claims.get("type"))) {
-            throw new InvalidTokenException("Incorrect type token");
+            if ("refresh".equals(claims.get("type"))) {
+                throw new InvalidTokenException("Incorrect token type. Access token expected.");
+            }
+
+            return UUID.fromString(claims.getSubject());
+        } catch (ExpiredJwtException _) {
+            throw new InvalidTokenException("Expired token");
+        } catch (MalformedJwtException | IllegalArgumentException _) {
+            throw new InvalidTokenException("Invalid token: incorrect format");
+        } catch (JwtException e) {
+            throw new InvalidTokenException("Invalid token: " + e.getMessage());
         }
-
-        return UUID.fromString(claims.getSubject());
     }
 
     @Override
     public UUID extractUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-        return UUID.fromString(claims.getSubject());
+            return UUID.fromString(claims.getSubject());
+        } catch (ExpiredJwtException _) {
+            throw new InvalidTokenException("Expired token");
+        } catch (MalformedJwtException | IllegalArgumentException _) {
+            throw new InvalidTokenException("Invalid token: incorrect format");
+        } catch (JwtException e) {
+            throw new InvalidTokenException("Invalid token: " + e.getMessage());
+        }
     }
 }
