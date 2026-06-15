@@ -4,6 +4,10 @@ spring:
   application:
     name: auth-service
 
+springdoc:
+  packages-to-scan: es.luis.almendros.authservice.infrastructure.web
+  paths-to-match: /auth/**
+
 server:
   port: 8081
 

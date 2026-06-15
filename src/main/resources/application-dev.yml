@@ -39,6 +39,10 @@ spring:
       include-binding-errors: always
       include-exception: true
 
+springdoc:
+  packages-to-scan: es.luis.almendros.authservice.infrastructure.web
+  paths-to-match: /auth/**
+
 jwt:
   expiration: 3600000
   refresh-expiration: 604800000
@@ -48,3 +52,4 @@ logging:
   level:
     com.portfolio.auth: DEBUG
     org.springframework.web: INFO
+    org.springdoc: DEBUG
