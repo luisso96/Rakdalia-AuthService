@@ -1,0 +1,11 @@
+.git
+.gitignore
+.gitattributes
+README.md
+build/
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+Dockerfile
+docker-compose.yml
+.env
+*.log
