@@ -3,9 +3,8 @@ package es.luis.almendros.authservice.domain.exceptions;
 import org.springframework.http.HttpStatus;
 
 public class WeakPasswordException extends DomainException {
-  private static final String ERROR_CODE = "WEAK_PASSWORD";
 
-  public WeakPasswordException(String message) {
-    super(message, ERROR_CODE, HttpStatus.BAD_REQUEST.value());
+  public WeakPasswordException() {
+    super("exception.password.too.short", "WEAK_PASSWORD", HttpStatus.BAD_REQUEST.value());
   }
 }

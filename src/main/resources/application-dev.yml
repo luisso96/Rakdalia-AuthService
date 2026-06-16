@@ -5,6 +5,11 @@ spring:
     password: password
     driver-class-name: org.postgresql.Driver
 
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+
   jpa:
     hibernate:
       ddl-auto: create

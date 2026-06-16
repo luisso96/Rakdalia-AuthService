@@ -67,16 +67,12 @@ public class JwtTokenAdapter implements JwtTokenPort {
                     .getPayload();
 
             if ("refresh".equals(claims.get("type"))) {
-                throw new InvalidTokenException("Incorrect token type. Access token expected.");
+                throw new InvalidTokenException();
             }
 
             return UUID.fromString(claims.getSubject());
-        } catch (ExpiredJwtException _) {
-            throw new InvalidTokenException("Expired token");
-        } catch (MalformedJwtException | IllegalArgumentException _) {
-            throw new InvalidTokenException("Invalid token: incorrect format");
-        } catch (JwtException e) {
-            throw new InvalidTokenException("Invalid token: " + e.getMessage());
+        } catch (IllegalArgumentException | JwtException _) {
+            throw new InvalidTokenException();
         }
     }
 
@@ -90,12 +86,8 @@ public class JwtTokenAdapter implements JwtTokenPort {
                     .getPayload();
 
             return UUID.fromString(claims.getSubject());
-        } catch (ExpiredJwtException _) {
-            throw new InvalidTokenException("Expired token");
-        } catch (MalformedJwtException | IllegalArgumentException _) {
-            throw new InvalidTokenException("Invalid token: incorrect format");
-        } catch (JwtException e) {
-            throw new InvalidTokenException("Invalid token: " + e.getMessage());
+        } catch (IllegalArgumentException | JwtException _) {
+            throw new InvalidTokenException();
         }
     }
 }

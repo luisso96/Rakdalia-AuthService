@@ -7,17 +7,15 @@ public abstract class DomainException extends RuntimeException {
 
     private final String errorCode;
     private final int httpStatus;
+    private final String messageKey;
+    private final Object[] args;
 
-    protected DomainException(String message, String errorCode, int httpStatus) {
-        super(message);
+    protected DomainException(String messageKey, String errorCode, int httpStatus, Object... args) {
+        super(messageKey);
+        this.messageKey = messageKey;
         this.errorCode = errorCode;
         this.httpStatus = httpStatus;
-    }
-
-    protected DomainException(String message, String errorCode, int httpStatus, Throwable cause) {
-        super(message, cause);
-        this.errorCode = errorCode;
-        this.httpStatus = httpStatus;
+        this.args = args;
     }
 
 }

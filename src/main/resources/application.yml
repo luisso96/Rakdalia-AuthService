@@ -3,6 +3,10 @@ spring:
     active: dev
   application:
     name: auth-service
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
 
 springdoc:
   packages-to-scan: es.luis.almendros.authservice.infrastructure.web

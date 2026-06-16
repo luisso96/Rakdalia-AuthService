@@ -9,13 +9,13 @@ public record Email(String value) {
 
     public Email {
         if (value == null || value.isBlank()) {
-            throw new InvalidEmailException("Email value is null or empty");
+            throw new InvalidEmailException();
         }
 
         String normalized = value.trim().toLowerCase();
 
         if (!EMAIL_PATTERN.matcher(normalized).matches()) {
-            throw new InvalidEmailException("Email value is invalid");
+            throw new InvalidEmailException();
         }
         value = normalized;
     }

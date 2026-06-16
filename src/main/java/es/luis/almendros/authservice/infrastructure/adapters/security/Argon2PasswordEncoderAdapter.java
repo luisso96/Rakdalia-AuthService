@@ -38,10 +38,10 @@ public class Argon2PasswordEncoderAdapter implements PasswordEncoderPort {
 
     private void validateRawPassword(String rawPassword) {
         if (rawPassword == null) {
-            throw new InvalidCredentialsException("Password is null");
+            throw new InvalidCredentialsException();
         }
         if (rawPassword.isBlank()) {
-            throw new InvalidCredentialsException("Password is blank");
+            throw new InvalidCredentialsException();
         }
     }
 }

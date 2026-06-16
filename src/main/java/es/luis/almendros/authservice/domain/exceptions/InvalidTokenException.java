@@ -4,9 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class InvalidTokenException extends DomainException {
 
-  private static final String ERROR_CODE = "INVALID_TOKEN";
-
-  public InvalidTokenException(String message) {
-    super(message, ERROR_CODE, HttpStatus.UNAUTHORIZED.value());
+  public InvalidTokenException() {
+    super("exception.invalid.token", "INVALID_TOKEN", HttpStatus.UNAUTHORIZED.value());
   }
 }

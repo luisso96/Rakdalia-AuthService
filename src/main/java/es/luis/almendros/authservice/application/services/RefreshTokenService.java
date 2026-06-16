@@ -24,10 +24,10 @@ public class RefreshTokenService implements RefreshTokenUseCase {
     public RefreshTokenResponse refresh(RefreshTokenCommand command) {
 
         UUID userId = jwtTokenPort.extractUserIdFromToken(command.refreshToken());
-        User user = userRepository.findById(userId).orElseThrow(() -> new InvalidTokenException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(InvalidTokenException::new);
 
         if (!user.isActive()) {
-            throw new InvalidTokenException("User deactivated");
+            throw new InvalidTokenException();
         }
 
         String newAccessToken = jwtTokenPort.generateAccessToken(

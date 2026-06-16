@@ -23,11 +23,11 @@ public class RegisterUserService implements RegisterUserUseCase {
     public RegisterUserResponse register(RegisterUserCommand command) {
 
         if (userRepository.existsByEmail(Email.of(command.email()))){
-            throw new UserAlreadyExistsException("This email is already registered.");
+            throw new UserAlreadyExistsException();
         }
 
         if (userRepository.existsByUsername(command.username())){
-            throw new UserAlreadyExistsException("A user with that name already exists.");
+            throw new UserAlreadyExistsException();
         }
 
         User newUser = User.register(

@@ -7,13 +7,13 @@ public record Password(String hashedValue) {
 
     public Password {
         if (hashedValue == null || hashedValue.isBlank()) {
-            throw new InvalidCredentialsException("Has is null or empty");
+            throw new InvalidCredentialsException();
         }
     }
 
     public static Password of(String rawPassword, PasswordEncoderPort encoder) {
         if (rawPassword == null || rawPassword.length() < 8) {
-            throw new InvalidCredentialsException("Password is too short");
+            throw new InvalidCredentialsException();
         }
         return new Password(encoder.encode(rawPassword));
     }

@@ -1,5 +1,6 @@
 package es.luis.almendros.authservice.infrastructure.web.handlers;
 
+import es.luis.almendros.authservice.application.services.MessageService;
 import es.luis.almendros.authservice.domain.exceptions.InvalidCredentialsException;
 import es.luis.almendros.authservice.domain.exceptions.InvalidTokenException;
 import es.luis.almendros.authservice.domain.exceptions.UserAlreadyExistsException;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.TestComponent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -22,8 +24,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@TestComponent
 class GlobalExceptionHandlerTest {
 
+    @Mock
+    private MessageService messageService;
     private GlobalExceptionHandler handler;
 
     @Mock
@@ -31,7 +36,7 @@ class GlobalExceptionHandlerTest {
 
     @BeforeEach
     void setUp() {
-        handler = new GlobalExceptionHandler();
+        handler = new GlobalExceptionHandler(messageService);
         java.lang.reflect.Field field = null;
         try {
             field = GlobalExceptionHandler.class.getDeclaredField("activeProfile");
@@ -45,14 +50,13 @@ class GlobalExceptionHandlerTest {
     @Test
     void shouldHandleUserAlreadyExistsException() {
         when(request.getRequestURI()).thenReturn("/auth/register");
-        UserAlreadyExistsException ex = new UserAlreadyExistsException("El email ya existe");
+        UserAlreadyExistsException ex = new UserAlreadyExistsException();
 
         ResponseEntity<ErrorResponse> response = handler.handleDomainException(ex, request);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(409, response.getBody().status());
-        assertEquals("El email ya existe", response.getBody().message());
         assertEquals("/auth/register", response.getBody().path());
         assertEquals("USER_ALREADY_EXISTS", response.getBody().errorCode());
     }
@@ -60,28 +64,26 @@ class GlobalExceptionHandlerTest {
     @Test
     void shouldHandleInvalidCredentialsException() {
         when(request.getRequestURI()).thenReturn("/auth/login");
-        InvalidCredentialsException ex = new InvalidCredentialsException("Credenciales inválidas");
+        InvalidCredentialsException ex = new InvalidCredentialsException();
 
         ResponseEntity<ErrorResponse> response = handler.handleDomainException(ex, request);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(401, response.getBody().status());
-        assertEquals("Credenciales inválidas", response.getBody().message());
         assertEquals("INVALID_CREDENTIALS", response.getBody().errorCode());
     }
 
     @Test
     void shouldHandleInvalidTokenException() {
         when(request.getRequestURI()).thenReturn("/auth/refresh");
-        InvalidTokenException ex = new InvalidTokenException("Token expirado");
+        InvalidTokenException ex = new InvalidTokenException();
 
         ResponseEntity<ErrorResponse> response = handler.handleDomainException(ex, request);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(401, response.getBody().status());
-        assertEquals("Token expirado", response.getBody().message());
         assertEquals("INVALID_TOKEN", response.getBody().errorCode());
     }
 

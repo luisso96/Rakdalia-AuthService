@@ -24,14 +24,14 @@ public class LoginService implements LoginUseCase {
 
     @Override
     public LoginResponse login(LoginCommand command) {
-        User user = userRepository.findByEmail(Email.of(command.email())).orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
+        User user = userRepository.findByEmail(Email.of(command.email())).orElseThrow(InvalidCredentialsException::new);
 
         if (!user.isActive()) {
-            throw new InvalidCredentialsException("User deactivated");
+            throw new InvalidCredentialsException();
         }
 
         if (!user.getPassword().matches(command.password(), passwordEncoder)) {
-            throw new InvalidCredentialsException("Invalid credentials");
+            throw new InvalidCredentialsException();
         }
 
         String accessToken = jwtTokenPort.generateAccessToken(

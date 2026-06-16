@@ -16,7 +16,7 @@ public class GetUserProfileService implements GetUserProfileUseCase {
 
     @Override
     public UserProfileResponse getProfile(GetUserProfileCommand command) {
-        var user = userRepository.findById(command.userId()).orElseThrow(() -> new InvalidTokenException("User not found"));
+        var user = userRepository.findById(command.userId()).orElseThrow(InvalidTokenException::new);
 
         return new UserProfileResponse(
                 user.getId().toString(),

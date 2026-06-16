@@ -4,9 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class InvalidEmailException extends DomainException {
 
-  private static final String ERROR_CODE = "INVALID_EMAIL";
-
-  public InvalidEmailException(String message) {
-    super(message, ERROR_CODE, HttpStatus.BAD_REQUEST.value());
+  public InvalidEmailException() {
+    super("exception.email.invalid", "INVALID_EMAIL", HttpStatus.BAD_REQUEST.value());
   }
 }

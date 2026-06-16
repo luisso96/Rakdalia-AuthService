@@ -20,11 +20,11 @@ public class ChangePasswordService implements ChangePasswordUseCase {
 
     @Override
     public void changePassword(ChangePasswordCommand command) {
-        var user = userRepository.findById(command.userId()).orElseThrow(() -> new InvalidCredentialsException("User not found"));
+        var user = userRepository.findById(command.userId()).orElseThrow(InvalidCredentialsException::new);
         boolean currentPasswordMatches = user.getPassword().matches(command.currentPassword(), passwordEncoder);
 
         if (!currentPasswordMatches) {
-            throw new InvalidCredentialsException("Incorrect password");
+            throw new InvalidCredentialsException();
         }
 
         if (command.currentPassword().equals(command.newPassword())) {
@@ -32,7 +32,7 @@ public class ChangePasswordService implements ChangePasswordUseCase {
         }
 
         if (command.newPassword().length() < 8) {
-            throw new WeakPasswordException("The new password must be at least 8 characters long");
+            throw new WeakPasswordException();
         }
 
         user.changePassword(command.newPassword(), passwordEncoder);

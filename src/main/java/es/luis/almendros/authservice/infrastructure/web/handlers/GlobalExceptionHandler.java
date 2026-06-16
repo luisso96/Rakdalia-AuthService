@@ -1,5 +1,6 @@
 package es.luis.almendros.authservice.infrastructure.web.handlers;
 
+import es.luis.almendros.authservice.application.services.MessageService;
 import es.luis.almendros.authservice.domain.exceptions.DomainException;
 import es.luis.almendros.authservice.domain.exceptions.TechnicalException;
 import es.luis.almendros.authservice.infrastructure.web.dtos.ErrorResponse;
@@ -24,22 +25,26 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final MessageService messageService;
 
     @Value("${spring.profiles.active:default}")
     private String activeProfile;
+
+    public GlobalExceptionHandler(MessageService messageService) {
+        this.messageService = messageService;
+    }
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResponse> handleDomainException(DomainException ex, HttpServletRequest request) {
         log.warn("DomainException: {} {}", ex.getMessage(), ex.getMessage());
 
-        String message = ex.getMessage();
-        String path = request.getRequestURI();
+        String localizedMessage = messageService.getMessage(ex.getMessageKey(), ex.getArgs());
 
         ErrorResponse response = ErrorResponse.withCode(
                 ex.getHttpStatus(),
                 getHttpStatusName(ex.getHttpStatus()),
-                message,
-                path,
+                localizedMessage,
+                request.getRequestURI(),
                 ex.getErrorCode()
         );
 
